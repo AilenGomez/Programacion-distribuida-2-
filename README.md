@@ -70,9 +70,7 @@ http://localhost:8070/swagger/index.html
 ### Swagger
 
 Donde se abrirá un swagger UI, con los endpoints de las api rest.
-
-![image](https://github.com/AilenGomez/Programacion-distribuida-2-/assets/32937466/aa350adb-a1ac-45a9-a56f-0c19a46be883)
-
+![image](https://github.com/AilenGomez/Programacion-distribuida-2-/assets/32937466/bfb72c6f-9e73-45d5-a116-5a599a3f6b7d)
 
 Haciendo click en "Try it out"
 
@@ -80,8 +78,7 @@ Luego en Execute:
 
 Lo mismo para el otro endpoint
 
-![image](https://github.com/AilenGomez/Programacion-distribuida-2-/assets/32937466/9d00fa31-f3ac-437d-888f-62b326503a95)
-
+![image](https://github.com/AilenGomez/Programacion-distribuida-2-/assets/32937466/d12ca9cd-a761-427b-a9db-6ba3f1a277e2)
 
 
 
