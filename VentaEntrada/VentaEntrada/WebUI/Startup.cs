@@ -1,5 +1,7 @@
 using FluentValidation.AspNetCore;
+using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -12,9 +14,11 @@ using VentaEntrada.Application;
 using VentaEntrada.Application.Common.Interfaces;
 using VentaEntrada.Application.Common.Utils;
 using VentaEntrada.Infrastructure;
+using VentaEntrada.Infrastructure.HealthChecks;
 using VentaEntrada.Infrastructure.Persistence;
 using VentaEntrada.WebUI.Common;
 using VentaEntrada.WebUI.Extensions;
+
 
 namespace VentaEntrada.WebUI
 {
@@ -52,8 +56,9 @@ namespace VentaEntrada.WebUI
 
             services.AddHttpContextAccessor();
 
-            services.AddHealthChecks()
-                .AddDbContextCheck<ApplicationDbContext>();
+            services.AddHealthChecks().AddSqlServer(VariablesUtil.GetConnectionString(Configuration))
+              .AddCheck<NotificacionHC>(nameof(NotificacionHC));
+
 
             services.AddControllers()
                 .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<IApplicationDbContext>())
@@ -101,7 +106,6 @@ namespace VentaEntrada.WebUI
             app.UseResponseCaching();
 
             app.UseCustomExceptionHandler();
-            app.UseHealthChecks("/health");
             //app.UseHttpsRedirection();
             app.UseStaticFiles();
             // Swagger UI with traefik stripprefix middleware support. Source code:
@@ -130,6 +134,11 @@ namespace VentaEntrada.WebUI
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHealthChecks("/health", new HealthCheckOptions()
+                {
+                    Predicate = _ => true,
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                });
                 endpoints.MapControllers();
             });
             app.UseRouting()

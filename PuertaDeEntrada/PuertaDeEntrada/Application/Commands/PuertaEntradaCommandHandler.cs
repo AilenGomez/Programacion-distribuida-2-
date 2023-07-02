@@ -1,11 +1,9 @@
-﻿using Application.Services;
+﻿using Application.DTOs;
+using Application.Services;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using PuertaDeEntrada.Application.Commands;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
-using UsersQueueApi.Application.DTOs;
 
 namespace PuertaDeEntrada.Application.Commands
 {
@@ -21,8 +19,9 @@ namespace PuertaDeEntrada.Application.Commands
 
         public async Task<TransactionResponse> Handle(PuertaEntradaCommand request, CancellationToken cancellationToken)
         {
+            _logger.LogInformation("Inicia pedido de numero de transaccion o numero de posicion en la fila en caso de estar ocupado el servicio");
             var transaction = await _puertaQueueService.AddQueue(request, cancellationToken);
-            
+
             return transaction;
         }
     }

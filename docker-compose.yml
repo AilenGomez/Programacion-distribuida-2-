@@ -9,6 +9,7 @@ services:
       - USERID=SA
       - PASSWORDDB=Passw0rd
       - DOTNET_ENVIRONMENT=Development
+      - VENTAENTRADAAPIURL=http://VentaEntrada
       - P=5
     restart: always
     ports:
@@ -24,6 +25,7 @@ services:
     container_name: Notificaciones
     image: notificaciones
     environment:
+      - NOTIFICACIONAPIURL=http://Notificaciones
       - DOTNET_ENVIRONMENT=Development
     restart: always
     ports:

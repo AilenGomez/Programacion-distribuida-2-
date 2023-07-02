@@ -58,6 +58,8 @@ git clone https://github.com/AilenGomez/Programacion-distribuida-2-
     - DATABASE=Nombre de la base de datos
     - USERID=Nombre de usuario del servicio de base de datos
     - PASSWORDDB=Contraseña del servicio de base de datos
+    - VENTAENTRADAAPIURL= Url del servicio venta de entrada
+    - NOTIFICACIONAPIURL=Url del servicio notificacion
     
 - Una vez instalado docker, abrir terminal en la carpeta donde se clonó el repositorio /Programacion-distribuida-2 y ejecutar el siguiente comando:
 
@@ -74,6 +76,19 @@ http://localhost:8070/swagger/index.html
 Servicio Puerta de entrada
 
 http://localhost:8070/swagger/index.html
+
+
+## :heavy_check_mark:HealthChecks
+
+Para cada servicio podemos ver los healthchecks en /health
+
+Servicio Venta de entrada 
+
+http://localhost:8070/health
+
+Servicio Puerta de entrada
+
+http://localhost:8070/health
 
 ## :alembic:Test 
 

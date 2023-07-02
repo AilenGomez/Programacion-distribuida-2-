@@ -28,5 +28,12 @@ namespace Notificaciones.Application.Common.Utils
         {
             return Directory.Exists(AppContext.BaseDirectory + "src/WebUI/") ? AppContext.BaseDirectory + "src/WebUI/" : AppContext.BaseDirectory;
         }
+        public static string GetValue(string key, IConfiguration configuration)
+        {
+            string value = Environment.GetEnvironmentVariable(key.ToUpper());
+            if (string.IsNullOrEmpty(value))
+                value = configuration[key];
+            return value;
+        }
     }
 }

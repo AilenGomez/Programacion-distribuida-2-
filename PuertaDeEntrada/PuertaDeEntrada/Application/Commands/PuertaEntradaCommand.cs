@@ -1,6 +1,6 @@
-﻿using MediatR;
+﻿using Application.DTOs;
+using MediatR;
 using System.ComponentModel.DataAnnotations;
-using UsersQueueApi.Application.DTOs;
 
 namespace PuertaDeEntrada.Application.Commands
 {

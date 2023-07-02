@@ -4,6 +4,8 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Threading.Tasks;
 using Notificaciones.Application.Common.Utils;
+using Serilog;
+using Serilog.Events;
 
 namespace Notificaciones.WebUI
 {
@@ -12,11 +14,15 @@ namespace Notificaciones.WebUI
         public async static Task Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
+            Log.Logger = new LoggerConfiguration()
+            .WriteTo.File("Log/log.txt")
+            .CreateLogger();
             await host.RunAsync();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+            .UseSerilog()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     var env = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT");

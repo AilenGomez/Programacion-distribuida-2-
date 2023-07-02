@@ -18,6 +18,7 @@ namespace VentaEntrada.Application.Commands
 
         public async Task<string> Handle(VentaEntradaCommand request, CancellationToken cancellationToken)
         {
+            _logger.LogInformation($"Inicia proceso de venta de asiento {request.row}-{request.column}");
             var transaction = await _entradaService.seatSale(request, cancellationToken);
 
             return transaction;

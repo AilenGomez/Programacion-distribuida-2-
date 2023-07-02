@@ -1,4 +1,4 @@
-﻿namespace UsersQueueApi.Application.DTOs
+﻿namespace Application.DTOs
 {
     public class TransactionResponse
     {

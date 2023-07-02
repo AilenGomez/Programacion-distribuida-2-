@@ -1,20 +1,21 @@
 using FluentValidation.AspNetCore;
+using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System.Collections.Generic;
 using PuertaDeEntrada.Application;
 using PuertaDeEntrada.Application.Common.Interfaces;
 using PuertaDeEntrada.Application.Common.Utils;
 using PuertaDeEntrada.Infrastructure;
-using PuertaDeEntrada.Infrastructure.Persistence;
+using PuertaDeEntrada.Infrastructure.HealthChecks;
 using PuertaDeEntrada.WebUI.Common;
 using PuertaDeEntrada.WebUI.Extensions;
+using System.Collections.Generic;
 
 namespace PuertaDeEntrada.WebUI
 {
@@ -52,8 +53,9 @@ namespace PuertaDeEntrada.WebUI
 
             services.AddHttpContextAccessor();
 
-            services.AddHealthChecks()
-                .AddDbContextCheck<ApplicationDbContext>();
+            services.AddHealthChecks().AddSqlServer(VariablesUtil.GetConnectionString(Configuration))
+                .AddCheck<VentaEntradaHC>(nameof(VentaEntradaHC));
+
 
             services.AddControllers()
                 .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<IApplicationDbContext>())
@@ -98,7 +100,8 @@ namespace PuertaDeEntrada.WebUI
             app.UseResponseCaching();
 
             app.UseCustomExceptionHandler();
-            app.UseHealthChecks("/health");
+
+
             //app.UseHttpsRedirection();
             app.UseStaticFiles();
             // Swagger UI with traefik stripprefix middleware support. Source code:
@@ -124,9 +127,14 @@ namespace PuertaDeEntrada.WebUI
             });
 
             app.UseRouting();
-
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHealthChecks("/health", new HealthCheckOptions()
+                {
+                    Predicate = _ => true,
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                });
+
                 endpoints.MapControllers();
             });
             app.UseRouting()

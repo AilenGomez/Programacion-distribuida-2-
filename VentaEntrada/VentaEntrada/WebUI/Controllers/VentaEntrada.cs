@@ -24,11 +24,11 @@ namespace PuertaDeEntrada.WebUI.Controllers
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> User([FromQuery] string transaction, int row, int column)
+        public async Task<IActionResult> User([FromQuery] VentaEntradaCommand ventaEntrada)
         {
             try
             {
-                return Ok(await Mediator.Send(new VentaEntradaCommand { transaction = transaction, row = row, column= column }));
+                return Ok(await Mediator.Send(ventaEntrada));
             }
             catch (Exception ex)
             {

@@ -15,6 +15,9 @@ using Notificaciones.Infrastructure;
 using Notificaciones.Infrastructure.Persistence;
 using Notificaciones.WebUI.Common;
 using Notificaciones.WebUI.Extensions;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using HealthChecks.UI.Client;
+using System;
 
 namespace Notificaciones.WebUI
 {
@@ -52,8 +55,7 @@ namespace Notificaciones.WebUI
 
             services.AddHttpContextAccessor();
 
-            services.AddHealthChecks()
-                .AddDbContextCheck<ApplicationDbContext>();
+            services.AddHealthChecks().AddUrlGroup(new Uri(VariablesUtil.GetValue("NotificacionApiUrl",Configuration)+"/ping"),"Self" );
 
             services.AddControllersWithViews()
                 .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<IApplicationDbContext>())
@@ -100,7 +102,6 @@ namespace Notificaciones.WebUI
             app.UseResponseCaching();
 
             app.UseCustomExceptionHandler();
-            app.UseHealthChecks("/health");
             //app.UseHttpsRedirection();
             app.UseStaticFiles();
             // Swagger UI with traefik stripprefix middleware support. Source code:
@@ -129,6 +130,11 @@ namespace Notificaciones.WebUI
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHealthChecks("/health", new HealthCheckOptions()
+                {
+                    Predicate = _ => true,
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                });
                 endpoints.MapControllers();
             });
             app.UseRouting()

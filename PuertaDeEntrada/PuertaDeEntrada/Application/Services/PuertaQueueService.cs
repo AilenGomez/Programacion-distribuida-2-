@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Application.DTOs;
+using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using PuertaDeEntrada.Application.Commands;
@@ -10,7 +11,6 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using UsersQueueApi.Application.DTOs;
 
 namespace Application.Services
 {
@@ -39,6 +39,7 @@ namespace Application.Services
                 if (transactions.Any(x => x.email == request.email && x.idTransaction == null))
                 {
                     transaction.posicion = transactions.Where(x => x.email == request.email).Select(x => x.posicion).FirstOrDefault();
+                    _logger.LogInformation($"El usuario {request.email} se encuentra en la posicion {transaction.posicion}");
                     return transaction;
                 }
                 if (transactions.Count() < Int32.Parse(P))
@@ -47,6 +48,8 @@ namespace Application.Services
                     await _genericRepository.AddAsync(transactioncreated);
                     await _unitOfWork.CommitAsync(cancellationToken);
                     transaction.transaction = transactioncreated.idTransaction;
+                    _logger.LogInformation($"El usuario {request.email} obtuvo el numero de transaccion {transactioncreated.idTransaction}");
+
                 }
                 else
                 {
@@ -54,6 +57,7 @@ namespace Application.Services
                     await _genericRepository.AddAsync(transactioncreated);
                     await _unitOfWork.CommitAsync(cancellationToken);
                     transaction.posicion = transactioncreated.posicion;
+                    _logger.LogInformation($"El usuario {request.email} se encuentra en la posicion {transaction.posicion}");
                 }
 
                 return transaction;

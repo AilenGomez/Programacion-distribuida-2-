@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Notificaciones.Application.Commands;
-using Notificaciones.WebUI.Controllers;
 using System;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace PuertaDeEntrada.WebUI.Controllers
+namespace Notificaciones.WebUI.Controllers
 {
     public class NotificacionController : ApiController
     {

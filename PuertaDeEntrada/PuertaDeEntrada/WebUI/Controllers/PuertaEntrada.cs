@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Logging;
 using PuertaDeEntrada.Application.Commands;
 using System;
-using System.Collections;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -16,11 +15,6 @@ namespace PuertaDeEntrada.WebUI.Controllers
             _logger = logger;
         }
 
-        /// <summary>
-        /// Post a new user
-        /// </summary>
-        /// <response code="200">Devuelve el objeto userResponse</response>
-        /// <response code="400">Error inesperado</response> 
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]

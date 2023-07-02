@@ -7,6 +7,8 @@ using PuertaDeEntrada.Application.Common.Utils;
 using PuertaDeEntrada.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
+using Serilog.Events;
 
 namespace PuertaDeEntrada.WebUI
 {
@@ -16,8 +18,12 @@ namespace PuertaDeEntrada.WebUI
         {
 
             var host = CreateHostBuilder(args).Build();
+            Log.Logger = new LoggerConfiguration()
+                        .WriteTo.File( "Log/log.txt")
+                        .CreateLogger();
             using (var scope = host.Services.CreateScope())
             {
+               
                 var services = scope.ServiceProvider;
                 try
                 {
@@ -34,10 +40,12 @@ namespace PuertaDeEntrada.WebUI
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                 .UseSerilog()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     var env = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT");
                     webBuilder.UseStartup<Startup>();
+                   
                     webBuilder.ConfigureAppConfiguration(config =>
                         config.SetBasePath(VariablesUtil.GetDirectoryAppSettings())
                         .AddJsonFile($"appsettings.{env}.json"));
