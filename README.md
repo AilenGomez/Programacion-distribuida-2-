@@ -48,7 +48,17 @@ git clone https://github.com/AilenGomez/Programacion-distribuida-2-
 ### :zap: Ejecución
 
 
+- Existe la posibilidad de configurar las variables:
 
+    - M=Tiempo de vencimiento del numero de transaccion 
+    - N= Medida de las dimensiones del lugar
+    - P= Cantidad de personas permitidas en simultaneo atendidas por el sistema de venta de entrada
+    - SERVER= Nombre del servicio de base de datos
+    - PORT= Puerto del servicio de base de datos
+    - DATABASE=Nombre de la base de datos
+    - USERID=Nombre de usuario del servicio de base de datos
+    - PASSWORDDB=Contraseña del servicio de base de datos
+    
 - Una vez instalado docker, abrir terminal en la carpeta donde se clonó el repositorio /Programacion-distribuida-2 y ejecutar el siguiente comando:
 
 ``` 

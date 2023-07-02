@@ -34,27 +34,36 @@ namespace Application.Services
             var P = VariablesUtil.GetValue("P",_configuration);
             var transaction = new TransactionResponse { };
             var transactions = _genericRepository.GetAll();
-            if (transactions.Any(x => x.email == request.email))
+            try
             {
-                transaction.posicion = transactions.Where(x => x.email == request.email).Select(x => x.posicion).FirstOrDefault();
+                if (transactions.Any(x => x.email == request.email && x.idTransaction == null))
+                {
+                    transaction.posicion = transactions.Where(x => x.email == request.email).Select(x => x.posicion).FirstOrDefault();
+                    return transaction;
+                }
+                if (transactions.Count() < Int32.Parse(P))
+                {
+                    var transactioncreated = new Transaction { idTransaction = Guid.NewGuid().ToString(), email = request.email, timeSpan = DateTime.Now.Subtract(new DateTime(1970, 1, 1)).TotalSeconds, posicion = null };
+                    await _genericRepository.AddAsync(transactioncreated);
+                    await _unitOfWork.CommitAsync(cancellationToken);
+                    transaction.transaction = transactioncreated.idTransaction;
+                }
+                else
+                {
+                    var transactioncreated = new Transaction { idTransaction = null, email = request.email, timeSpan = null, posicion = transactions.Count() + 1 - Int32.Parse(P) };
+                    await _genericRepository.AddAsync(transactioncreated);
+                    await _unitOfWork.CommitAsync(cancellationToken);
+                    transaction.posicion = transactioncreated.posicion;
+                }
+
                 return transaction;
             }
-            if (transactions.Count() < Int32.Parse(P))
+            catch(Exception ex)
             {
-                var transactioncreated = new Transaction { idTransaction = Guid.NewGuid().ToString(), email = request.email, timeSpan = DateTime.Now.Subtract(new DateTime(1970, 1, 1)).TotalSeconds, posicion = null };
-                await _genericRepository.AddAsync(transactioncreated);
-                await _unitOfWork.CommitAsync(cancellationToken);
-                transaction.transaction = transactioncreated.idTransaction;
+                throw new Exception("Ese mail ya tiene una transaccion asignada");
             }
-            else
-            {
-                var transactioncreated = new Transaction { idTransaction = null, email = request.email, timeSpan = null, posicion = transactions.Count() + 1 - Int32.Parse(P) };
-                await _genericRepository.AddAsync(transactioncreated);
-                await _unitOfWork.CommitAsync(cancellationToken);
-                transaction.posicion = transactioncreated.posicion;
-            }
+            
 
-            return transaction;
         }
     }
 }

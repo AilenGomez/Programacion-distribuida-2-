@@ -22,7 +22,6 @@ namespace PuertaDeEntrada.WebUI
                 try
                 {
                     var context = services.GetRequiredService<ApplicationDbContext>();
-                    AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
                      context.Database.Migrate(); //EntityFrameworkCore\Update-Database -verbose
                     await host.RunAsync();
                 }
